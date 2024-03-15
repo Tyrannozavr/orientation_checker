@@ -23,7 +23,6 @@ const specialStyle = computed(() => {
 })
 const move = () => {
   let param = Math.floor(Math.random() * 2);
-  // console.log(param)
   styles.value[param] += 200
 }
 const answer = ref('я знал')
@@ -34,7 +33,14 @@ const moveTop = () => styles.value[0] -= 40
 const moveDown = () => styles.value[0] += 40
 const moveLeft = () => styles.value[1] += 40
 const moveRight = () => styles.value[1] -= 40
-const answerYes = () => console.log('hello')
+const answerYes = () => {
+  answerStyle.value['opacity'] = '1'
+  answer.value = 'Я знал!!!'
+}
+const answerNo = () => {
+    answerStyle.value['opacity'] = '1'
+  answer.value = '«Мерзость пред Господом — уста лживые, а говорящие истину благоугодны Ему». (Прит. 12:22)'
+}
 </script>
 <template>
   <div>
@@ -48,13 +54,21 @@ const answerYes = () => console.log('hello')
       <div
           class="btn yes"
           @click="answerYes"
-      >да
+      >
+        да
       </div>
       <div
-          class="btn no"
+          class="no"
           :style="specialStyle"
+
+      >
+        <div
           @mouseenter="move"
-      >нет
+            @click="answerNo"
+            class="btn">
+          нет
+        </div>
+
         <div
             @mouseenter="moveDown"
             class="top"></div>
@@ -70,7 +84,7 @@ const answerYes = () => console.log('hello')
 
       </div>
     </div>
-  </div>а 
+  </div>
 </template>
 <style>
 .main {
@@ -78,6 +92,9 @@ const answerYes = () => console.log('hello')
   width: 1800px;
   height: 900px;
   position: relative;
+  @media (max-width: 580px) {
+    width: 100%;
+  }
 }
 
 .btn {
@@ -95,6 +112,10 @@ const answerYes = () => console.log('hello')
   position: absolute;
   top: 200px;
   right: 300px;
+  @media (max-width: 580px) {
+    left: 20px;
+    top: 200px;
+  }
 }
 .no {
   position: absolute;
@@ -108,22 +129,32 @@ const answerYes = () => console.log('hello')
   width: 150px;
   font-size: 30px;
   text-align: center;
+  @media (max-width: 580px) {
+    top: 50px;
+    left: 100px;
+  }
 }
 .answer {
   position: absolute;
   top: 200px;
   left: 850px;
-  background: blue;
+  background: gold;
   height: 40px;
   width: 150px;
   font-size: 30px;
   text-align: center;
+  @media (max-width: 580px) {
+    top: 300px;
+    left: 0;
+    width: 100%;
+    height: auto;
+  }
 }
 .top {
   width: 120px;
   height: 30px;
   position: absolute;
-  background: gold;
+  //background: gold;
   top: -40px;
   left: -20px;
 }
@@ -131,7 +162,7 @@ const answerYes = () => console.log('hello')
   width: 120px;
   height: 30px;
   position: absolute;
-  background: gray;
+  //background: gray;
   bottom: -40px;
   left: -20px;
 }
@@ -139,7 +170,7 @@ const answerYes = () => console.log('hello')
   height: 120px;
   width: 30px;
   position: absolute;
-  background: green;
+  //background: green;
   bottom: -20px;
   left: -40px;
 }
@@ -147,7 +178,7 @@ const answerYes = () => console.log('hello')
   height: 120px;
   width: 30px;
   position: absolute;
-  background: blue;
+  //background: blue;
   bottom: -20px;
   right: -40px;
 }
