@@ -1,4 +1,21 @@
 <script setup>
+const {data: count, refresh} = await useFetch('api/count', {
+  server: false,
+})
+const yes = computed(() => {
+  if (count.value) {
+    return count.value.yes
+  } else {
+    return 0
+  }
+})
+const no = computed(() => {
+  if (count.value) {
+    return count.value.no
+  } else {
+    return 0
+  }
+})
 
 const styles = ref([200, 300])
 const specialStyle = computed(() => {
@@ -16,8 +33,8 @@ const specialStyle = computed(() => {
   }
 
   return {
-    top: String(styles.value[0])+'px',
-    left: String(styles.value[1]+'px')
+    top: String(styles.value[0]) + 'px',
+    left: String(styles.value[1] + 'px')
   }
 
 })
@@ -27,20 +44,29 @@ const move = () => {
 }
 const answer = ref('я знал')
 const answerStyle = ref({
-    'opacity': '0',
-  })
+  'opacity': '0',
+})
 const moveTop = () => styles.value[0] -= 40
 const moveDown = () => styles.value[0] += 40
 const moveLeft = () => styles.value[1] += 40
 const moveRight = () => styles.value[1] -= 40
-const answerYes = () => {
+const answerYes = async () => {
   answerStyle.value['opacity'] = '1'
   answer.value = 'Я знал!!!'
+  await useFetch('api/count', {
+      server: false, query: {answer: 'yes'}
+    })
+  await refresh()
 }
-const answerNo = () => {
-    answerStyle.value['opacity'] = '1'
+const answerNo = async () => {
+  answerStyle.value['opacity'] = '1'
   answer.value = '«Мерзость пред Господом — уста лживые, а говорящие истину благоугодны Ему». (Прит. 12:22)'
+    await useFetch('api/count', {
+      server: false, query: {answer: 'no'}
+    })
+  await refresh()
 }
+
 </script>
 <template>
   <div>
@@ -49,7 +75,7 @@ const answerNo = () => {
       <div
           :style="answerStyle"
           class="answer">
-        {{answer}}
+        {{ answer }}
       </div>
       <div
           class="btn yes"
@@ -63,7 +89,7 @@ const answerNo = () => {
 
       >
         <div
-          @mouseenter="move"
+            @mouseenter="move"
             @click="answerNo"
             class="btn">
           нет
@@ -83,6 +109,10 @@ const answerNo = () => {
             class="right"></div>
 
       </div>
+    </div>
+    <div class="rating">
+      <div class="rating_yes">количество геев - {{ yes }}</div>
+      <div class="rating_no">количество не геев - {{ no }}</div>
     </div>
   </div>
 </template>
@@ -117,9 +147,11 @@ const answerNo = () => {
     top: 200px;
   }
 }
+
 .no {
   position: absolute;
 }
+
 .text {
   position: absolute;
   top: 150px;
@@ -134,6 +166,7 @@ const answerNo = () => {
     left: 100px;
   }
 }
+
 .answer {
   position: absolute;
   top: 200px;
@@ -150,6 +183,7 @@ const answerNo = () => {
     height: auto;
   }
 }
+
 .top {
   width: 120px;
   height: 30px;
@@ -158,6 +192,7 @@ const answerNo = () => {
   top: -40px;
   left: -20px;
 }
+
 .bottom {
   width: 120px;
   height: 30px;
@@ -166,6 +201,7 @@ const answerNo = () => {
   bottom: -40px;
   left: -20px;
 }
+
 .left {
   height: 120px;
   width: 30px;
@@ -174,6 +210,7 @@ const answerNo = () => {
   bottom: -20px;
   left: -40px;
 }
+
 .right {
   height: 120px;
   width: 30px;
@@ -181,6 +218,15 @@ const answerNo = () => {
   //background: blue;
   bottom: -20px;
   right: -40px;
+}
+
+.rating {
+  position: absolute;
+  top: 500px;
+  left: 800px;
+  @media (max-width: 580px) {
+    left: 25%;
+  }
 }
 
 </style>
